@@ -1,17 +1,38 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import ReactDOM from 'react-dom';
+import React,{useState,useEffect} from "react";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+function Userdemo(){
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+  const[users,setUsers]=useState([]);
+  const[loading,setLoading]=useState(true);
+
+  useEffect(()=>{
+    fetch('https://jsonplaceholder.typicode.com/users')
+    .then(response => response.json())
+    .then(data=>{
+      setUsers(data);
+      setLoading(false);
+    })
+
+    .catch(error=>{
+      console.log("if it is not loading,will be error message",error)
+      setLoading(false);
+    });
+  },[]);
+
+    if(loading){
+      return<p>loading</p>
+    }
+    return(
+      <div>
+        <h1>List out the users</h1>
+        <ol>
+          {users.map(user=>(
+            <li key={user.id}>{user.name}</li>
+          ))}
+        </ol>
+      </div>
+    )
+  
+}
+ReactDOM.render(<Userdemo/>,document.getElementById("root"));
